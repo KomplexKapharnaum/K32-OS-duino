@@ -226,7 +226,7 @@ void osc_task( void * parameter ) {
     }
 
     // yield();
-    wifi_otaCheck();
+    wifi_loop();
     delay(1);
   }
 
