@@ -23,7 +23,7 @@
 K32_settings* settings;
 K32_stm32* stm32;
 K32_wifi* wifi;
-K32_osc* osc;
+K32_osc* osced;
 K32_leds* leds;
 K32_audio* audio;
 K32_samplermidi* sampler;
@@ -73,8 +73,8 @@ void setup() {
   // }
 
   // OSC init
-  osc = new K32_osc(3737, 4037);
-  
+  osced = new K32_osc(3737, 4037, "10.2.255.255");
+
 }
 
 int testkey = 0;
