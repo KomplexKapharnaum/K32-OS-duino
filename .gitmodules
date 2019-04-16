@@ -4,3 +4,6 @@
 [submodule "lib/ESP8266Audio"]
 	path = lib/ESP8266Audio
 	url = git@github.com:Maigre/ESP8266Audio.git
+[submodule "lib/ArduinoOSC"]
+	path = lib/ArduinoOSC
+	url = https://github.com/hideakitai/ArduinoOSC.git

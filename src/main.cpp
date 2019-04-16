@@ -14,18 +14,21 @@
 #include "K32_settings.h"
 #include "K32_stm32.h"
 #include "K32_wifi.h"
+#include "K32_osc.h"
 #include "K32_leds.h"
+#include "K32_leds_anims.h"
 #include "K32_audio.h"
 #include "K32_samplermidi.h"
 
 K32_settings* settings;
 K32_stm32* stm32;
 K32_wifi* wifi;
+K32_osc* osc;
 K32_leds* leds;
 K32_audio* audio;
 K32_samplermidi* sampler;
 
-#include "ksync.h"
+// #include "ksync.h"
 // #include "kosc.h"
 
 void setup() {
@@ -43,11 +46,7 @@ void setup() {
 
   // STM32
   stm32 = new K32_stm32();
-  stm32->listen(true, true);
-
-  // LEDS
-  leds = new K32_leds();
-  leds->test();
+  // stm32->listen(true, true);
 
   // AUDIO
   audio = new K32_audio();
@@ -55,6 +54,12 @@ void setup() {
     LOG("Audio engine failed to start.. RESET !");
     stm32->reset();
   }
+  // delay(2000);
+
+  // LEDS
+  leds = new K32_leds();
+  leds->play( K32_leds_anims::test );
+  leds->play( K32_leds_anims::sinus );
 
   // SAMPLER MIDI
   sampler = new K32_samplermidi();
@@ -66,6 +71,10 @@ void setup() {
   // if (!wifi->wait(10)) {
   //   stm32->reset();
   // }
+
+  // OSC init
+  osc = new K32_osc(3737, 4037);
+  
 }
 
 int testkey = 0;
@@ -75,7 +84,10 @@ void loop() {
   if (stm32->dblclicked()) stm32->reset();
 
 
-  bool playing = audio->run();
+  // leds->play( K32_leds_anims::sinus );
+  // delay(4000);
+
+  // bool playing = audio->run();
 
   // AUDIO TEST
   // if (!playing) {
