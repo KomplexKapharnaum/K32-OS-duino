@@ -1,4 +1,4 @@
-#define K32_VERSION  0.9   // Refactoring
+#define NODEID 255
 
 #include "K32.h"
 
@@ -11,18 +11,25 @@ void setup() {
     .leds     = true,     // dual ws2812 
     .audio    = true,     // audio engine with PCM51xx sound card
     .sampler  = true,     // media indexing to midi bank/note-xxx
-    .wifi     = {         // wifi settings ({} to disable)
+    .wifi     = {         
       .ssid = "interweb",             // ssid (NULL to disable)
       .password = "superspeed37",     // password (NULL if not secured)
-      .ip = NULL,                      // static ip (NULL to use DHCP)
-      .osc = 1818                       // osc port (0 = disable)
+      .ip = NULL                      // static ip (NULL to use DHCP)
+    },
+    .osc      = {         
+      .port = 1818,          // osc port (0 = disable)
+      .beat = 0,              // heartbeat interval milliseconds (0 = disable)
+      .beacon = 0             // full beacon interval milliseconds (0 = disable)
     }
   });
+  
+  // Settings SET
+  #ifdef NODEID
+    engine->settings->set("id", NODEID);
+  #endif
+  engine->settings->set("channel", 1);
+  engine->settings->set("model", 1);   // 0: proto -- 1: big -- 2: small
 
-  if (engine->audio) {
-    engine->audio->loop(true);
-    engine->audio->play( engine->sampler->path( 0, 1 ) );
-  }
 }
 
 void loop() {
