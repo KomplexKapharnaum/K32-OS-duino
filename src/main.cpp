@@ -7,7 +7,7 @@ K32* engine;
 void setup() {
 
   engine = new K32({
-    .stm32    = false,     // stm32 event listening and battery monitoring
+    .stm32    = true,     // stm32 event listening and battery monitoring
     .leds     = true,     // dual ws2812 
     .audio    = true,     // audio engine with PCM51xx sound card
     .sampler  = true,     // media indexing to midi bank/note-xxx
@@ -18,8 +18,8 @@ void setup() {
     },
     .osc      = {         
       .port = 1818,          // osc port (0 = disable)
-      .beat = 0,              // heartbeat interval milliseconds (0 = disable)
-      .beacon = 0             // full beacon interval milliseconds (0 = disable)
+      .beat = 500,              // heartbeat interval milliseconds (0 = disable)
+      .beacon = 2000             // full beacon interval milliseconds (0 = disable)
     }
   });
   
@@ -34,7 +34,10 @@ void setup() {
 
 void loop() {
 
-  if (engine->stm32->dblclicked()) engine->stm32->reset();
+  if (engine->stm32->clicked() && engine->audio && engine->sampler) 
+    engine->audio->play( engine->sampler->path( 0, 2 ) );
+  else if (engine->stm32->dblclicked()) 
+    engine->stm32->reset();
   delay(10);
 
 
@@ -53,10 +56,3 @@ void loop() {
   // }
 }
 
-/*
-NOTES TODO !!
-
-- CLICKS and BLIPS audio => underflow dma zero ?
-- LEDS: stop anim in progress (better time frame)
-
-*/

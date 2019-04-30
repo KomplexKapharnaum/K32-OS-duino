@@ -11,3 +11,19 @@ To start working with this project:
 - Open Project with PlatformIO
 - Build and Flash !
 
+
+TODO:
+
+- ARTNET
+- No SSID -> disable Wifi entirely
+- OSC Beacon: JSON
+- OSC Burst (msg id)
+- OSC LOG args
+- Monitor system 
+- Midi Bridge (separated)
+- CLICKS and BLIPS audio => test without WIFI
+- OSC channel change
+- OSC beat Multicast
+- Websocket ? MQTT ?
+- Unbind sd (init and check) from audio engine
+
