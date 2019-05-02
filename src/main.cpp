@@ -28,8 +28,8 @@ void setup() {
   #ifdef NODEID
     engine->settings->set("id", NODEID);
     engine->settings->set("channel", 15);
-    engine->settings->set("model", 1);   // 0: proto -- 1: big -- 2: small
   #endif
+    engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
   
 }
 
@@ -42,12 +42,14 @@ void loop() {
     }
     else {
       engine->audio->loop(true);
+      // engine->audio->volume(50);
       engine->audio->play( engine->sampler->path( 0, 3 ) );
       engine->leds->play("sinus");
     }
   }
-  // else if (engine->stm32->dblclicked()) 
-  //   engine->stm32->reset();
+  else if (engine->stm32->dblclicked()) 
+    engine->stm32->reset();
+
   delay(10);
 
 }

@@ -14,6 +14,7 @@ To start working with this project:
 
 TODO:
 
+- STM32: btn bug without serial...
 - ARTNET: node
 - ARTNET: to/from DMX
 - OSC: Beacon: JSON
