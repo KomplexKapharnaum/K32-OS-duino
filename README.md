@@ -14,16 +14,16 @@ To start working with this project:
 
 TODO:
 
-- ARTNET
-- No SSID -> disable Wifi entirely
-- OSC Beacon: JSON
-- OSC Burst (msg id)
-- OSC LOG args
+- ARTNET: node
+- ARTNET: to/from DMX
+- OSC: Beacon: JSON
+- OSC: Burst (msg id)
+- OSC: LOG args on receive
 - Monitor system 
-- Midi Bridge (separated)
-- CLICKS and BLIPS audio => test without WIFI
-- OSC channel change
-- OSC beat Multicast
+- MIDI: Bridge (separated)
+- AUDIO: CLICKS and BLIPS audio
+- OSC: channel change
+- OSC: beat Multicast
 - Websocket ? MQTT ?
 - Unbind sd (init and check) from audio engine
-
+- Better conf system (with webpage ? and AP ?)
