@@ -15,7 +15,7 @@ To start working with this project:
 TODO:
 
 - STM32: btn bug without serial...
-- AUDIO Forced kill (not clean !)
+- AUDIO / OSC: Memory Leak !
 
 - ARTNET: node
 - ARTNET: to/from DMX
