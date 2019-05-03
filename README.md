@@ -15,6 +15,7 @@ To start working with this project:
 TODO:
 
 - STM32: btn bug without serial...
+- AUDIO Forced kill (not clean !)
 
 - ARTNET: node
 - ARTNET: to/from DMX

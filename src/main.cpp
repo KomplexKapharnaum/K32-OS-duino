@@ -42,8 +42,8 @@ void loop() {
     }
     else {
       engine->audio->loop(true);
-      // engine->audio->volume(50);
       engine->audio->play( engine->sampler->path( 0, 3 ) );
+      engine->audio->volume(20);
       engine->leds->play("sinus");
     }
   }

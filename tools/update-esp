@@ -58,11 +58,15 @@ class Upgrader(Thread):
         self.info = info
 
     def run(self):
-        print "Uploading to ", self.info['ip']
+        stri = "Uploading to "+str(self.info['ip'])
+        print stri
         cmd = 'python ~/Arduino/hardware/espressif/esp32/tools/espota.py -i '+self.info['ip']+' -I '+ip_of_sender+' -p '+self.info['port']+' -P '+str(self.port)+' -f '+firmware
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         if (p.wait() == 0):
-            print "Updated ", self.info['ip']
+            stri = "Updated " + str(self.info['ip'])
+        else:
+            stri = "Failed " + str(self.info['ip'])
+        print stri
 
  
 if __name__ == '__main__':
