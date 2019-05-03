@@ -12,8 +12,8 @@ void setup() {
     .audio    = true,     // audio engine with PCM51xx sound card
     .sampler  = true,     // media indexing to midi bank/note-xxx
     .wifi     = {         
-      .ssid = "interweb",             // ssid (NULL to disable)
-      .password = "superspeed37",     // password (NULL if not secured)
+      .ssid = "kxkm24",             // ssid (NULL to disable)
+      .password = NULL,     // password (NULL if not secured)
       .ip = NULL                      // static ip (NULL to use DHCP)
     },
     .osc  = {         

@@ -39,7 +39,7 @@ class ServiceListener(object):
         	if clients[name]['upgrade']:
         		global upgradeCount
         		upgradeCount += 1
-        	print "Device ", len(clients),": ", name.split(type)[0], "detected: ", "UPGRADABLE" if  clients[name]['upgrade'] else "OK"
+        	print "Device ", len(clients),": ", name.split(type)[0], "UPGRADABLE" if  clients[name]['upgrade'] else "OK"
             
             #print( "  Weight is %d, Priority is %d" % (info.getWeight(),
             #                                          info.getPriority()))
@@ -73,6 +73,12 @@ if __name__ == '__main__':
         listener = ServiceListener()
         browser = ServiceBrowser(r, type, listener)
         # print("LOCAL ip: "+ str(ip_of_sender) +"\n")
+        print "============================================="
+        print "============ ESP32 - OTA updater ============"
+        print "============================================="
+        print ""
+        print "Firmware date: ", time.ctime(os.stat(firmware).st_mtime)
+        print ""
 
         try:
             a = raw_input("Detecting devices... Press Enter when ready.\n\n")
