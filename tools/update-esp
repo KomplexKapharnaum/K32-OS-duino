@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 import subprocess, socket
-import os , sys
+import os , sys, signal
 from threading import Thread
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -52,19 +52,18 @@ class ServiceListener(object):
             
             
 class Upgrader(Thread):       
-	def __init__(self, port, info):
-		Thread.__init__(self)
-		self.port = port
-		self.info = info
+    def __init__(self, port, info):
+        Thread.__init__(self)
+        self.port = port
+        self.info = info
 
-	def run(self):
-		print "Uploading to ", self.info['ip']
-		cmd = 'python ~/Arduino/hardware/espressif/esp32/tools/espota.py -i '+self.info['ip']+' -I '+ip_of_sender+' -p '+self.info['port']+' -P '+str(self.port)+' -f '+firmware
-		p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-		for line in p.stdout.readlines():
-			print line,
-		retval = p.wait()
-		print retval
+    def run(self):
+        print "Uploading to ", self.info['ip']
+        cmd = 'python ~/Arduino/hardware/espressif/esp32/tools/espota.py -i '+self.info['ip']+' -I '+ip_of_sender+' -p '+self.info['port']+' -P '+str(self.port)+' -f '+firmware
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        if (p.wait() == 0):
+            print "Updated ", self.info['ip']
+
  
 if __name__ == '__main__':
     while True:
@@ -74,7 +73,16 @@ if __name__ == '__main__':
         listener = ServiceListener()
         browser = ServiceBrowser(r, type, listener)
         # print("LOCAL ip: "+ str(ip_of_sender) +"\n")
-        a = raw_input("Detecting devices... Press Enter when ready.\n\n")
+
+        try:
+            a = raw_input("Detecting devices... Press Enter when ready.\n\n")
+        except KeyboardInterrupt:
+            r.close()
+            browser.cancel();
+            listener.r.close();
+            print "Goodbye :)"
+            os.kill(os.getpid(), signal.SIGKILL)
+
         r.close()
         #time.sleep(2)
         y = raw_input("Upload to "+str(upgradeCount)+" Devices ?... [y/n]\n\n")
@@ -84,7 +92,7 @@ if __name__ == '__main__':
         threadlist = []
         for esp, info in clients.items():
             if info['upgrade']:
-                print "Preparing upload to ", info['ip']
+                # print "Preparing upload to ", info['ip']
                 threadlist.append(Upgrader(esp_respond_sender_port, info))
                 esp_respond_sender_port += 1
             
