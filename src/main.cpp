@@ -12,8 +12,8 @@ void setup() {
     .audio    = true,     // audio engine with PCM51xx sound card
     .sampler  = true,     // media indexing to midi bank/note-xxx
     .wifi     = {         
-      .ssid = "kxkm24",             // ssid (NULL to disable)
-      .password = NULL,     // password (NULL if not secured)
+      .ssid = "interweb",             // ssid (NULL to disable)
+      .password = "superspeed37",     // password (NULL if not secured)
       .ip = NULL                      // static ip (NULL to use DHCP)
     },
     .osc  = {         
@@ -31,6 +31,7 @@ void setup() {
   #endif
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
   
+
 }
 
 void loop() {
@@ -51,6 +52,8 @@ void loop() {
     engine->stm32->reset();
 
   delay(10);
+
+  // LOGF("Heap: %d \n", xPortGetFreeHeapSize());
 
 }
 
