@@ -1,4 +1,4 @@
-//#define NODEID 255
+#define NODEID 255
 
 #include "K32.h"
 
@@ -8,7 +8,7 @@ void setup() {
 
   engine = new K32({
     .stm32    = true,     // stm32 event listening and battery monitoring
-    .leds     = true,     // dual ws2812 
+    .leds     = false,     // dual ws2812 
     .audio    = true,     // audio engine with PCM51xx sound card
     .sampler  = true,     // media indexing to midi bank/note-xxx
     .wifi     = {         
@@ -19,8 +19,8 @@ void setup() {
     .osc  = {         
       .port_in  = 1818,             // osc port input (0 = disable)
       .port_out = 1819,             // osc port output (0 = disable)
-      .beatInterval     = 500,              // heartbeat interval milliseconds (0 = disable)
-      .beaconInterval   = 2000             // full beacon interval milliseconds (0 = disable)
+      .beatInterval     = 0,              // heartbeat interval milliseconds (0 = disable)
+      .beaconInterval   = 500             // full beacon interval milliseconds (0 = disable)
     }
   });
   
@@ -36,16 +36,29 @@ void setup() {
 
 void loop() {
 
+  // if (engine->stm32->clicked()) {
+  //   if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
+  //     engine->audio->stop();
+  //     engine->leds->stop();
+  //   }
+  //   else {
+  //     engine->audio->loop(true);
+  //     engine->audio->play( "/test.mp3" );
+  //     engine->audio->volume(20);
+  //     engine->leds->play("sinus");
+  //   }
+  // }
+  // else if (engine->stm32->dblclicked()) 
+  //   engine->stm32->reset();
+
   if (engine->stm32->clicked()) {
-    if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
+    if (engine->audio->isPlaying()) {
       engine->audio->stop();
-      engine->leds->stop();
     }
     else {
       engine->audio->loop(true);
-      engine->audio->play( engine->sampler->path( 0, 3 ) );
+      engine->audio->play( "/test.mp3" );
       engine->audio->volume(20);
-      engine->leds->play("sinus");
     }
   }
   else if (engine->stm32->dblclicked()) 

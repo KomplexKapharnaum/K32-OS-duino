@@ -1,6 +1,3 @@
 [submodule "lib/K32-lib"]
 	path = lib/K32-lib
-	url = git@github.com:KomplexKapharnaum/K32-lib.git
-[submodule "lib/ESP8266Audio"]
-	path = lib/ESP8266Audio
-	url = git@github.com:Maigre/ESP8266Audio.git
+	url = https://github.com/KomplexKapharnaum/K32-lib.git
