@@ -16,21 +16,21 @@ void setup() {
       .password = NULL,             // password (NULL if not secured)
       .ip = NULL                    // static ip (NULL to use DHCP)
     },
-    .osc  = {         
+    .osc  = {
       .port_in  = 1818,             // osc port input (0 = disable)
       .port_out = 1819,             // osc port output (0 = disable)
       .beatInterval     = 0,        // heartbeat interval milliseconds (0 = disable)
       .beaconInterval   = 5000      // full beacon interval milliseconds (0 = disable)
     }
   });
-  
+
   // Settings SET
   #ifdef NODEID
     engine->settings->set("id", NODEID);
     engine->settings->set("channel", 15);
   #endif
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
-  
+
 
 }
 
@@ -48,7 +48,7 @@ void loop() {
   //     engine->leds->play("sinus");
   //   }
   // }
-  // else if (engine->stm32->dblclicked()) 
+  // else if (engine->stm32->dblclicked())
   //   engine->stm32->reset();
 
   delay(10);
@@ -56,4 +56,3 @@ void loop() {
   // LOGF("Heap: %d \n", xPortGetFreeHeapSize());
 
 }
-
