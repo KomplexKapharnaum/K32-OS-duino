@@ -5,7 +5,6 @@ from threading import Thread
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 clients = {}
-ip_of_sender = subprocess.check_output("hostname -I" , shell=True).decode('utf-8').rstrip()
 esp_respond_sender_port = 3235
 
 version_filter = False
@@ -17,30 +16,32 @@ upgradeCount = 0
 
 from zero import *
 import time
- 
+
 class ServiceListener(object):
     def __init__(self):
         self.r = Zeroconf()
- 
+
     def removeService(self, zeroconf, type, name):
         print()
         print( "Service", name, "removed")
- 
+
     def addService(self, zeroconf, type, name):
         #print( "  Type is", type)
         info = self.r.getServiceInfo(type, name)
         if info:
-            clients[name] = {}
-            clients[name]['ip'] = str(socket.inet_ntoa(info.getAddress())).rstrip()
-            clients[name]['port'] =  str(info.getPort())
-            try:
-                clients[name]['version'] = name.split('v')[1][:4]
-            except:
-                clients[name]['version'] = 0
-            print "Device ", len(clients),": ", name.split(type)[0]
-            
-            
-class Upgrader(Thread):       
+			clients[name] = {}
+			clients[name]['ip'] = str(socket.inet_ntoa(info.getAddress())).rstrip()
+			clients[name]['port'] =  str(info.getPort())
+			try:
+			    clients[name]['version'] = name.split('v')[1][:4]
+			except:
+			    clients[name]['version'] = 0
+			global upgradeCount
+			upgradeCount += 1
+			print "Device ", len(clients),": ", name.split(type)[0]
+
+
+class Upgrader(Thread):
     def __init__(self, port, info):
         Thread.__init__(self)
         self.port = port
@@ -57,7 +58,7 @@ class Upgrader(Thread):
             stri = "Failed " + str(self.info['ip'])
         print stri
 
- 
+
 if __name__ == '__main__':
     while True:
         upgradeCount = 0
@@ -67,7 +68,6 @@ if __name__ == '__main__':
         type = "_arduino._tcp.local."
         listener = ServiceListener()
         browser = ServiceBrowser(r, type, listener)
-        # print("LOCAL ip: "+ str(ip_of_sender) +"\n")
         print "============================================="
         print "============ ESP32 - PowerOFF ============"
         print "============================================="
@@ -87,19 +87,15 @@ if __name__ == '__main__':
         y = raw_input("Power off "+str(upgradeCount)+" Devices ?... [y/n]\n\n")
         if y is not 'y':
             continue
-            
+
         threadlist = []
         for esp, info in clients.items():
             # print "Preparing upload to ", info['ip']
             threadlist.append(Upgrader(esp_respond_sender_port, info))
             esp_respond_sender_port += 1
-            
+
         for t in threadlist:
             t.start()
-        
+
         for t in threadlist:
             t.join()
-    	
-    	
-    	
-
