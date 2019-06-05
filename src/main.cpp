@@ -8,10 +8,10 @@ void setup() {
 
   engine = new K32({
     .stm32    = true,     // stm32 event listening and battery monitoring
-    .leds     = true,     // dual ws2812 
-    .audio    = true,     // audio engine with PCM51xx sound card
-    .sampler  = true,     // media indexing to midi bank/note-xxx
-    .wifi     = {         
+    .leds     = true,     // dual ws2812
+    .audio    = false,     // audio engine with PCM51xx sound card
+    .sampler  = false,     // media indexing to midi bank/note-xxx
+    .wifi     = {
       .ssid = "kxkm24",             // ssid (NULL to disable)
       .password = NULL,             // password (NULL if not secured)
       .ip = NULL                    // static ip (NULL to use DHCP)
