@@ -9,11 +9,19 @@ void setup() {
   engine = new K32({
     .stm32    = true,     // stm32 event listening and battery monitoring
     .leds     = true,     // dual ws2812
+<<<<<<< Updated upstream
     .audio    = false,     // audio engine with PCM51xx sound card
     .sampler  = false,     // media indexing to midi bank/note-xxx
     .wifi     = {
       .ssid = "kxkm24",             // ssid (NULL to disable)
       .password = NULL,             // password (NULL if not secured)
+=======
+    .audio    = true,     // audio engine with PCM51xx sound card
+    .sampler  = true,     // media indexing to midi bank/note-xxx
+    .wifi     = {
+      .ssid = "kxkm-wifi",             // ssid (NULL to disable)
+      .password = "KOMPLEXKAPHARNAUM",             // password (NULL if not secured)
+>>>>>>> Stashed changes
       .ip = NULL                    // static ip (NULL to use DHCP)
     },
     .osc  = {
@@ -36,20 +44,26 @@ void setup() {
 
 void loop() {
 
-  // if (engine->stm32->clicked()) {
-  //   if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
-  //     engine->audio->stop();
-  //     engine->leds->stop();
-  //   }
-  //   else {
-  //     engine->audio->loop(true);
-  //     engine->audio->play( "/test.mp3" );
-  //     engine->audio->volume(50);
-  //     engine->leds->play("sinus");
-  //   }
-  // }
-  // else if (engine->stm32->dblclicked())
-  //   engine->stm32->reset();
+  if (engine->stm32->clicked()) {
+    if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
+      engine->audio->stop();
+      engine->leds->stop();
+    }
+    else {
+      engine->audio->loop(true);
+      engine->audio->play( "/test.mp3" );
+      engine->audio->volume(50);
+      engine->leds->play("sinus");
+    }
+  }
+  else if (engine->stm32->dblclicked())
+  {
+    uint8_t led_RSSI[6];
+    //uint8_t led_off[6] = {0, 0, 0, 0, 4, 0};
+
+    engine->wifi->getWiFiLevel(led_RSSI);
+    engine->stm32->blink(led_RSSI, 1000);
+  }
 
   delay(10);
 
