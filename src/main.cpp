@@ -8,20 +8,13 @@ void setup() {
 
   engine = new K32({
     .stm32    = true,     // stm32 event listening and battery monitoring
-    .leds     = true,     // dual ws2812
-<<<<<<< Updated upstream
+    .leds     = false,     // dual ws2812
     .audio    = false,     // audio engine with PCM51xx sound card
     .sampler  = false,     // media indexing to midi bank/note-xxx
-    .wifi     = {
-      .ssid = "kxkm24",             // ssid (NULL to disable)
-      .password = NULL,             // password (NULL if not secured)
-=======
-    .audio    = true,     // audio engine with PCM51xx sound card
-    .sampler  = true,     // media indexing to midi bank/note-xxx
+    .power    = true,     // power monitoring
     .wifi     = {
       .ssid = "kxkm-wifi",             // ssid (NULL to disable)
       .password = "KOMPLEXKAPHARNAUM",             // password (NULL if not secured)
->>>>>>> Stashed changes
       .ip = NULL                    // static ip (NULL to use DHCP)
     },
     .osc  = {
@@ -39,30 +32,43 @@ void setup() {
   #endif
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
 
-
+    //if (engine->power) engine->power->start();
 }
+
+
+int current;
+
 
 void loop() {
 
+  current = engine->stm32->current();
+  LOGF("2000,%d \n",current);
+
   if (engine->stm32->clicked()) {
-    if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
-      engine->audio->stop();
-      engine->leds->stop();
-    }
-    else {
-      engine->audio->loop(true);
-      engine->audio->play( "/test.mp3" );
-      engine->audio->volume(50);
-      engine->leds->play("sinus");
-    }
+    // if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
+    //   engine->audio->stop();
+    //   engine->leds->stop();
+    // }
+    // else {
+    //   engine->audio->loop(true);
+    //   engine->audio->play( "/test.mp3" );
+    //   engine->audio->volume(50);
+    //   engine->leds->play("sinus");
+    //}
   }
   else if (engine->stm32->dblclicked())
   {
     uint8_t led_RSSI[6];
-    //uint8_t led_off[6] = {0, 0, 0, 0, 4, 0};
+    uint8_t led_off[6] = {0, 0, 0, 0, 4, 0};
 
     engine->wifi->getWiFiLevel(led_RSSI);
     engine->stm32->blink(led_RSSI, 1000);
+
+    //engine->power->stop();
+
+
+
+
   }
 
   delay(10);
