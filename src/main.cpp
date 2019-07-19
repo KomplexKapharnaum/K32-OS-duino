@@ -1,4 +1,4 @@
-// #define NODEID 32
+// #define NODEID 1
 
 #include "K32.h"
 
@@ -24,7 +24,7 @@ void setup() {
     },
     .mqtt = {
       .broker = "2.0.0.1",      //"2.0.0.1"
-      .beatInterval = 5000            // heartbeat interval milliseconds (0 = disable)
+      .beatInterval = 0            // heartbeat interval milliseconds (0 = disable)
     }
 
   });
@@ -32,41 +32,44 @@ void setup() {
   // Settings SET
   #ifdef NODEID
     engine->settings->set("id", NODEID);
-  #endif
-    engine->settings->set("channel", 1);
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
-
+    engine->settings->set("channel", 15);
+  #endif
 
 }
 
-#include "driver/i2s.h"
 
 void loop() {
 
   if (engine->stm32->clicked()) {
+
+    if (engine->audio->isPlaying()) {
+      engine->audio->stop();
+    }
+    else {
+      engine->audio->loop(true);
+      engine->audio->play( engine->sampler->path( engine->settings->get("id"), 16)  );
+      engine->audio->volume(50);
+    }
+
     // if (engine->audio->isPlaying() || engine->leds->isPlaying()) {
     //   engine->audio->stop();
-    //   // engine->leds->stop();
+    //   engine->leds->stop();
     // }
     // else {
     //   engine->audio->loop(true);
     //   engine->audio->play( engine->sampler->path(3, 0)  );
     //   engine->audio->volume(50);
-    //   // engine->leds->play("sinus");
+    //   engine->leds->play("sinus");
     // }
-    engine->stm32->send(K32_stm32_api::SET_LOAD_SWITCH, 0);
-    delay(2000);
-    engine->stm32->send(K32_stm32_api::SET_LOAD_SWITCH, 1);
+
+    // engine->stm32->send(K32_stm32_api::SET_LOAD_SWITCH, 0);
+    // delay(2000);
+    // engine->stm32->send(K32_stm32_api::SET_LOAD_SWITCH, 1);
   }
   else if (engine->stm32->dblclicked())
     engine->stm32->reset();
 
-  delay(2000);
-  // LOGF("Heap: %d \n", xPortGetFreeHeapSize());
-
-  // LOGINL("AUDIO: Power state = ");
-  // LOG(engine->audio->pcm->getPowerState());
-  // LOGINL("AUDIO: Automute flag = ");
-  // LOG(engine->audio->pcm->readRegister(PCM51xx::AUTO_MUTE_FLAGS));
+  delay(500);
 
 }

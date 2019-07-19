@@ -17,36 +17,33 @@ CHALON:
 
 BUG:
 - STM32: btn bug without serial...
-- AUDIO: CLICKS and BLIPS audio
+- MQTT: can't publish..
 
+MAJOR:
+- MONITOR system 
+- ARTNET: node RIRI
+- OSC: Burst (msg id)
+- OSC: Beacon: JSON
+- MIDI: OSC Burst (instead of MQTT)
+- Audio sleep: replace delay(10) with mutex
+- K32 Bridge: choose iface + mode (MQTT / OSC / OSC Burst)
+- MQTT: system settings
+- SYS: hardware version (+pinout) from stm32
+- SYS: id from stm32 
 
 MINOR:
 - ARTNET: to/from DMX
 - OSC: LOG args on receive
 - OSC: channel change
+- MQTT: leds dispatch (not done yet)
+- MQTT: BROKER with mDNS declaration (auto-discovery)
 - Unbind sd (init and check) from audio engine
-- SYS: hardware version (+pinout) from stm32
-- SYS: id from stm32 
-
-MAJOR:
-- ARTNET: node
-- MQTT: interface
-- OSC: Burst (msg id)
-- OSC: Beacon: JSON
-- MIDI: Standalone bridge + MQTT + OSC Burst
-- Monitor system 
-- Audio sleep: replace delay(10) with mutex
 
 
 FUTURE:
 - OSC: beat Multicast
 - Better conf system (with webpage ? and AP ?)
+- ESP-IDF !!
 
 
-MQTT:
-- BROKER raspi (mosquitto) // mDNS declaration
-- MIDI bridge: virtual midi OUT // discover (mDNS) + connect MQTT broker // publish on [midi/c16/noteon]
-- ESP MQTT client: discover (mDNS) + connect MQTT broker
-    - audio/midi: subscribe to [midi/c16/#] // bind to audio player
-    - monitoring: publish on [status/esp/32]
 
