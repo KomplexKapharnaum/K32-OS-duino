@@ -1,7 +1,5 @@
-#include <Arduino.h>
-
-// #define K32_SET_NODEID        1   // board unique id    (necessary one time only)
-// #define K32_SET_HWREVISION    2   // board HW revision  (necessary one time only)
+#define K32_SET_NODEID        1   // board unique id    (necessary one time only)
+#define K32_SET_HWREVISION    2   // board HW revision  (necessary one time only)
 
 
 #include "K32.h"
@@ -13,16 +11,12 @@ void setup() {
   k32 = new K32();
 
   k32->init_stm32();
-  // k32->init_audio();
-  // k32->init_light();
+  k32->init_audio();
+  k32->init_light();
 
   // WIFI
-  k32->init_wifi(/* custom name */);
-  // k32->wifi->staticIP("2.0.0.100", "2.0.0.1", "255.0.0.0");
-  k32->wifi->connect("kxkm-wifi", "KOMPLEXKAPHARNAUM");
-  // k32->wifi->add("ReMoTe");
-  // k32->wifi->add("kxkm24lulu", NULL, "2.0.0."+String(k32->settings->id()+100), "255.0.0.0", "2.0.0.1");
-  // k32->wifi->add("interweb", "superspeed37");
+  k32->init_wifi("classic");
+  k32->wifi->connect("interweb", "superspeed37");
 
   // Start OSC
   k32->init_osc({
@@ -30,6 +24,13 @@ void setup() {
       .port_out = 1819,             // osc port output (0 = disable) // 1819
       .beatInterval     = 0,        // heartbeat interval milliseconds (0 = disable)
       .beaconInterval   = 3000      // full beacon interval milliseconds (0 = disable)
+    });
+
+  // Start MQTT
+  k32->init_mqtt({
+      .broker  = "192.168.0.70",         // MQTT broker
+      .beatInterval     = 0,             // heartbeat interval milliseconds (0 = disable)
+      .beaconInterval   = 3000           // full beacon interval milliseconds (0 = disable)
     });
 
 }
