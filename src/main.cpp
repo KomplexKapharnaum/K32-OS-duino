@@ -178,11 +178,13 @@ void setup() {
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
 
    if (engine->power) engine->power->start();
+   engine->audio->volume(10);
 
-   engine->audio->loop(true);
-   engine->audio->volume(5);
-   engine->audio->play( "/robot.mp3" );
-   engine->leds->play("sinus");
+
+   // engine->audio->loop(true);
+   // engine->audio->volume(5);
+   // engine->audio->play( "/robot.mp3" );
+   // engine->leds->play("sinus");
 
 
 
@@ -210,53 +212,50 @@ void loop() {
     currentTime=millis();
    if(!(engine->power->charge))
    {
+     if (!(engine->audio->isPlaying()))
+      {
+        engine->audio->stop();
+        engine->audio->loop(false);
+        engine->audio->play( "/decharge1.mp3" );
+        engine->leds->stop();
+      }
      engine->leds->stop();
+
      if(engine->power->SOC > 30 ) {
-       engine->leds->leds()->setStrip(1,0,255,0);
+       for (int i=0;i < engine->power->SOC*60/100; i++)
+       {
+         engine->leds->leds()->setPixel(1,i,0,255,0);
+       }
+
+
      }
      else if(engine->power->SOC > 10 )
      {
-       engine->leds->leds()->setStrip(1,255,165,0);
+       for (int i=0;i<engine->power->SOC*60/100; i++)
+       {
+         engine->leds->leds()->setPixel(1,i,255,165,0);
+       }
      } else
      {
        engine->leds->leds()->setStrip(0,255,0,0);
      }
       engine->leds->leds()->show();
    }
+   else
+   {
+     if (!(engine->audio->isPlaying()))
+      {
+        engine->audio->loop(true);
+        engine->audio->play( "/robot.mp3" );
+      }
+      engine->leds->play("sinus");
+   }
 }
 
 
  if (engine->stm32->clicked()) {
 
-   if (engine->power->charge) {
-     engine->power->charge = false ;
-     LOG("Decharge");
-     engine->audio->stop();
-     engine->audio->loop(false);
-     engine->audio->play( "/decharge1.mp3" );
-     engine->leds->stop();
-     if(engine->power->SOC > 10 ) {
-       engine->leds->leds()->setStrip(1,0,255,0);
-     }
-     else
-     {
-       engine->leds->leds()->setStrip(0,255,0,0);
-     }
-      engine->leds->leds()->show();
 
-
-
-
-   } else
-   {
-     engine->power->charge = true;
-     LOG("Charge");
-     engine->audio->loop(true);
-     engine->audio->play( "/robot.mp3" );
-     engine->audio->volume(10);
-     engine->leds->play("sinus");
-
-   }
 
 
 
