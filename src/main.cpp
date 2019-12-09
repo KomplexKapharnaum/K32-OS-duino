@@ -176,12 +176,16 @@ void setup() {
     engine->settings->set("channel", 15);
   #endif
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
+
    if (engine->power) engine->power->start();
 
    engine->audio->loop(true);
-   engine->audio->play( "/robot.mp3" );
    engine->audio->volume(5);
+   engine->audio->play( "/robot.mp3" );
    engine->leds->play("sinus");
+
+
+
 
    //swSer.begin(19200);
    //Serial1.begin(19200, SERIAL_8N1, 15, 13);
@@ -197,35 +201,13 @@ void setup() {
 void loop() {
 
 
-//   int len = Serial1.available();
-// if (len > 0){
-//    char sbuf[len+1];
-//        sbuf[len] = '\0';
-//        Serial1.readBytes ( sbuf, len);
-//    String s = String(sbuf);
-//    LOG(s);
-// }
 
-
-  // char c;
-
-    // if (Serial.available()) {
-    //   c = Serial.read();
-    //   Serial2.print(c);
-    // }
-    // while (Serial2.available()) {
-    //   LOG(char(Serial2.read()));
-    // }
-    // if(swSerial.available()) {
-    //   c = swSerial.read();
-    //       LOG(c);
-    // }
-
-
-/******** Routine every 5 sec ***********/
- if ((millis() - currentTime) > 5000)
+/******** Routine every 10 sec ***********/
+ if ((millis() - currentTime) > 10000)
  {
-   currentTime=millis();
+
+
+    currentTime=millis();
    if(!(engine->power->charge))
    {
      engine->leds->stop();
@@ -289,6 +271,8 @@ void loop() {
    engine->stm32->blink(led_RSSI, 1000);
 
 // EPD DEMO
+// epd_init();
+// epd_wakeup();
 //    engine->power->stop();
 //      epd_set_memory(MEM_NAND);
 //    base_draw();
