@@ -147,6 +147,8 @@ void draw_bitmap_demo(void)
 
 K32* engine;
 unsigned long currentTime=millis();
+bool previousChargeState = true; // t
+K32_leds_anim* LedsAnim ;
 
 
 void setup() {
@@ -177,7 +179,8 @@ void setup() {
   #endif
     engine->settings->set("model", 2);   // 0: proto -- 1: big -- 2: small
 
-   if (engine->power) engine->power->start();
+   if (engine->power)
+    engine->power->start();
    engine->audio->volume(10);
 
 
@@ -200,107 +203,112 @@ void setup() {
 }
 
 
-void loop() {
-
-
-
-/******** Routine every 10 sec ***********/
- if ((millis() - currentTime) > 10000)
- {
-
-
-    currentTime=millis();
-   if(!(engine->power->charge))
+void loop()
+{
+  /******** Routine every 2 sec ***********/
+   if ((millis() - currentTime) > 2000)
    {
-     if (!(engine->audio->isPlaying()))
-      {
-        engine->audio->stop();
-        engine->audio->loop(false);
-        engine->audio->play( "/decharge1.mp3" );
-        engine->leds->stop();
-      }
-     engine->leds->stop();
+      currentTime=millis();
 
-     if(engine->power->SOC > 30 ) {
-       for (int i=0;i < engine->power->SOC*60/100; i++)
+     if(!(engine->power->charge))
+     {
+       if (previousChargeState)
+        {
+          engine->audio->stop();
+          engine->audio->loop(false);
+          engine->audio->play( "/decharge1.mp3" );
+          engine->leds->stop();
+          previousChargeState=false;
+          LedsAnim = engine->leds->anim("decharge");
+          engine->leds->play(LedsAnim);
+        }
+
+       if(engine->power->SOC < 40 )
        {
-         engine->leds->leds()->setPixel(1,i,0,255,0);
+         LedsAnim->setParam(3, 255);
+         LedsAnim->setParam(4, 165);
+         LedsAnim->setParam(5, 0);
+         LedsAnim->setParam(7, 200);
+         LedsAnim->setParam(8, 0);
+         LedsAnim->setParam(9, 0);
        }
-
+       else if(engine->power->SOC < 10 )
+       {
+         // engine->leds->stop();
+         // LedsAnim = engine->leds->anim("sinus");
+         // engine->leds->play(LedsAnim);
+         // engine->audio->play( "/decharge1.mp3" );
+       } else
+       {
+         LedsAnim->setParam(3, 0);
+         LedsAnim->setParam(4, 100);
+         LedsAnim->setParam(5, 0);
+         LedsAnim->setParam(7, 255);
+         LedsAnim->setParam(8, 165);
+         LedsAnim->setParam(9, 0);
+       }
+       LedsAnim->setParam(11, engine->power->SOC);
 
      }
-     else if(engine->power->SOC > 10 )
+     else
      {
-       for (int i=0;i<engine->power->SOC*60/100; i++)
-       {
-         engine->leds->leds()->setPixel(1,i,255,165,0);
-       }
-     } else
-     {
-       engine->leds->leds()->setStrip(0,255,0,0);
+       if (!previousChargeState )
+        {
+          engine->audio->loop(true);
+          engine->audio->play( "/robot.mp3" );
+          previousChargeState=true;
+          LedsAnim = engine->leds->anim("charge");
+          LedsAnim->setParam(11, engine->power->SOC);
+          engine->leds->play(LedsAnim);
+        }
+
+        if(engine->power->SOC < 40 )
+        {
+          LedsAnim->setParam(3, 255);
+          LedsAnim->setParam(4, 165);
+          LedsAnim->setParam(5, 0);
+          LedsAnim->setParam(7, 200);
+          LedsAnim->setParam(8, 0);
+          LedsAnim->setParam(9, 0);
+        }
+        else if(engine->power->SOC < 10 )
+        {
+          LedsAnim->setParam(3, 200);
+          LedsAnim->setParam(4, 0);
+          LedsAnim->setParam(5, 0);
+          LedsAnim->setParam(7, 0);
+          LedsAnim->setParam(8, 0);
+          LedsAnim->setParam(9, 0);
+        } else
+        {
+          LedsAnim->setParam(3, 0);
+          LedsAnim->setParam(4, 100);
+          LedsAnim->setParam(5, 0);
+          LedsAnim->setParam(7, 255);
+          LedsAnim->setParam(8, 165);
+          LedsAnim->setParam(9, 0);
+        }
+        LedsAnim->setParam(11, engine->power->SOC);
+
      }
-      engine->leds->leds()->show();
+  }
+
+
+   if (engine->stm32->clicked()) {
+
+     LedsAnim->setParam(11, 20);
+
    }
-   else
+   else if (engine->stm32->dblclicked())
    {
-     if (!(engine->audio->isPlaying()))
-      {
-        engine->audio->loop(true);
-        engine->audio->play( "/robot.mp3" );
-      }
-      engine->leds->play("sinus");
-   }
-}
 
+     uint8_t led_RSSI[6];
+     uint8_t led_off[6] = {0, 0, 0, 0, 4, 0};
 
- if (engine->stm32->clicked()) {
-
-
-
-
-
- }
- else if (engine->stm32->dblclicked())
- {
-
-   uint8_t led_RSSI[6];
-   uint8_t led_off[6] = {0, 0, 0, 0, 4, 0};
-
-   engine->wifi->getWiFiLevel(led_RSSI);
-   engine->stm32->blink(led_RSSI, 1000);
-
-// EPD DEMO
-// epd_init();
-// epd_wakeup();
-//    engine->power->stop();
-//      epd_set_memory(MEM_NAND);
-//    base_draw();
-//
-// /*
-// Draw text demo
-// */
-// draw_text_demo();
-//
-// epd_clear();
-// epd_disp_bitmap("PIC4.BMP", 0, 0);
-// epd_udpate();
-// delay(5000);
-//
-// epd_clear();
-// epd_disp_bitmap("PIC2.BMP", 0, 100);
-// epd_disp_bitmap("PIC3.BMP", 400, 100);
-// epd_udpate();
-// delay(5000);
-//
-// epd_clear();
-// epd_disp_bitmap("PIC7.BMP", 0, 0);
-// epd_udpate();
-//EPD DEMO
-
-
+     engine->wifi->getWiFiLevel(led_RSSI);
+     engine->stm32->blink(led_RSSI, 1000);
 
  }
 
   // LOGF("Heap: %d \n", xPortGetFreeHeapSize());
-
 }
