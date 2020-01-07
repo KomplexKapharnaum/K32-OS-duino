@@ -16,7 +16,7 @@ void setup() {
 
   // WIFI
   k32->init_wifi("classic");
-  k32->wifi->connect("interweb", "superspeed37");
+  k32->wifi->connect("kxkm24", NULL);
 
   // Start OSC
   k32->init_osc({
@@ -28,7 +28,7 @@ void setup() {
 
   // Start MQTT
   k32->init_mqtt({
-      .broker  = "192.168.0.70",         // MQTT broker
+      .broker  = "2.0.0.1",         // MQTT broker
       .beatInterval     = 0,             // heartbeat interval milliseconds (0 = disable)
       .beaconInterval   = 3000           // full beacon interval milliseconds (0 = disable)
     });
