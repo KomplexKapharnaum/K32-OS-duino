@@ -1,4 +1,4 @@
-#define K32_SET_NODEID        1   // board unique id    (necessary one time only)
+#define K32_SET_NODEID        95   // board unique id    (necessary one time only)
 #define K32_SET_HWREVISION    2   // board HW revision  (necessary one time only)
 
 
