@@ -1,4 +1,4 @@
-// #define NODEID 44
+#define NODEID (50)
 
 #include "K32.h"
 
@@ -21,8 +21,8 @@ int PowerValue = 0;
 int RefValue = 0;
 int mode = 0;
 bool sinusOn = true;
-const int TimeOut = 5; // TimeOut of Leds anims in secs.  0 = infinite
-const int InterruptTime = 10 ; // Time of Leds anim interrupt in secs
+int TimeOut = 0; // TimeOut of Leds anims in secs.  0 = infinite
+int InterruptTime = 10 ; // Time of Leds anim interrupt in secs
 
 const int Color1[4] = {0,100,0,0};
 const int Color2[4] = {100,75,0,0};
@@ -62,14 +62,10 @@ void setup() {
     engine->power->start();
 
 
-   // engine->audio->loop(true);
-   // engine->audio->volume(5);
-   // engine->audio->play( "/robot.mp3" );
+
 LedsAnim = engine->leds->anim("decharge");
 LedsAnim->setParam(0, TimeOut);
-// LedsAnim->setParam(11,41);
-//
-// engine->leds->play(LedsAnim);
+
 
 
 }
@@ -78,8 +74,6 @@ LedsAnim->setParam(0, TimeOut);
 void loop()
 {
 
-  if (mode == 0) // Gauge Level
-  {
   /******** Routine every 5 sec ***********/
    if ((millis() - currentTime) > InterruptTime * 1000)
    {
@@ -167,117 +161,22 @@ void loop()
 
 
        LedsAnim->setParam(11, engine->power->SOC); // Set State Of Charge
-       engine->leds->play(LedsAnim); // Play anim
-     currentTime=millis();
-   }
- } else if(mode == 1) // Power 1
- {
-   if (millis() - currentTime > InterruptTime * 1000)
-   {
-     LedsAnim = engine->leds->anim("current"); // Set anim to current
-     LedsAnim->setParam(0, TimeOut); // Set TimeOut
-     LedsAnim->setParam(1, Color1[0]);
-     LedsAnim->setParam(2, Color1[1]);
-     LedsAnim->setParam(3, Color1[2]);
-     LedsAnim->setParam(5, Color2[0]);
-     LedsAnim->setParam(6, Color2[1]);
-     LedsAnim->setParam(7, Color2[2]);
-     PowerValue = engine->power->power() ;
-     LedsAnim->setParam(9, PowerValue/3000); // Set State Of Charge
-     engine->leds->play(LedsAnim); // Play anim
-     currentTime=millis();
-
-   }
-   if ((millis() - loopTime) > 200)
-   {
-     PowerValue = engine->power->power() ;
-     LedsAnim->setParam(9, PowerValue/3000); // Set Power Value
-   loopTime=millis();
-   }
- }
- else if(mode ==2) // Power 2
- {
-   if (millis() - currentTime > InterruptTime * 1000)
-     {
-       LedsAnim = engine->leds->anim("current2"); // Set anim to current2
-       LedsAnim->setParam(0, TimeOut); // Set TimeOut
-       LedsAnim->setParam(1, Color1[0]);
-       LedsAnim->setParam(2, Color1[1]);
-       LedsAnim->setParam(3, Color1[2]);
-       LedsAnim->setParam(5, Color2[0]);
-       LedsAnim->setParam(6, Color2[1]);
-       LedsAnim->setParam(7, Color2[2]);
        PowerValue = engine->power->power() ;
-       LedsAnim->setParam(9, PowerValue/3000); // Set State Of Charge
+       LedsAnim->setParam(12, abs(PowerValue)/1000); // Set Power
+       LOG(PowerValue / 1000);
        engine->leds->play(LedsAnim); // Play anim
-       currentTime=millis();
-
-   }
- if ((millis() - loopTime) > 200)
-   {
-     PowerValue = engine->power->power() ;
-     LedsAnim->setParam(9, PowerValue/3000); // Set Power Value
-   loopTime=millis();
-   }
- } else if(mode ==3) // Double visu
- {
-   if (millis() - currentTime > InterruptTime * 1000)
-     {
-       LedsAnim = engine->leds->anim("double"); // Set anim to current2
-       LedsAnim->setParam(0, TimeOut); // Set TimeOut
-       LedsAnim->setParam(1, Color1[0]);
-       LedsAnim->setParam(2, Color1[1]);
-       LedsAnim->setParam(3, Color1[2]);
-       LedsAnim->setParam(5, Color2[0]);
-       LedsAnim->setParam(6, Color2[1]);
-       LedsAnim->setParam(7, Color2[2]);
-       LedsAnim->setParam(10, engine->power->SOC);
-
-       PowerValue = engine->power->power() ;
-       LedsAnim->setParam(9, PowerValue/3000); // Set State Of Charge
-       engine->leds->play(LedsAnim); // Play anim
-       currentTime=millis();
-
-   }
- if ((millis() - loopTime) > 200)
-   {
-     PowerValue = engine->power->power() ;
-     LedsAnim->setParam(9, PowerValue/3000); // Set Power Value
-   loopTime=millis();
-   }
- } else if (mode == 4)
- {
-   if (millis() - currentTime > InterruptTime * 1000)
-   {
-       if (sinusOn)
-       {
-       LedsAnim = engine->leds->anim("sinus");
-       LedsAnim->setParam(3, Color3[0]);
-       LedsAnim->setParam(4, Color3[1]);
-       LedsAnim->setParam(5, Color3[2]);
-       LedsAnim->setParam(6, 0);
-       sinusOn=false;
-       }
-       else
-       {
-         LedsAnim = engine->leds->anim("chaser");
-         LedsAnim->setParam(3, Color3[0]);
-         LedsAnim->setParam(4, Color3[1]);
-         LedsAnim->setParam(5, Color3[2]);
-         LedsAnim->setParam(6, 0);
-         sinusOn = true;
-       }
-
-      engine->leds->play(LedsAnim); // Play anim
      currentTime=millis();
-    }
- }
+   }
 
 
 
    if (engine->stm32->clicked()) {
-     mode ++;
-     if (mode == 5) mode = 0;
+
+     // mode ++;
+     // if (mode == 5) mode = 0;
+     engine->power->set_demo();
+     TimeOut = 0; // TimeOut of Leds anims in secs.  0 = infinite
+     InterruptTime = 5 ; // Time of Leds anim interrupt in secs
 
 
 
