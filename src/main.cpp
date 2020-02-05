@@ -1,4 +1,4 @@
-#define NODEID (50)
+//#define NODEID (97)
 
 #include "K32.h"
 
@@ -21,12 +21,13 @@ int PowerValue = 0;
 int RefValue = 0;
 int mode = 0;
 bool sinusOn = true;
-int TimeOut = 0; // TimeOut of Leds anims in secs.  0 = infinite
+int TimeOutDech = 7 ; // Nb of cycle TimeOut of Leds anims in secs.  0 = infinite
+int TimeOutCharge = 5 ;
 int InterruptTime = 10 ; // Time of Leds anim interrupt in secs
 
-const int Color1[4] = {0,100,0,0};
-const int Color2[4] = {100,75,0,0};
-const int Color3[4] = {100,0,0,0};
+const int Color1[4] = {0,101,0,0}; /* Green */
+const int Color2[4] = {100,75,0,0}; /* Orange */
+const int Color3[4] = {100,0,0,0}; /* Red*/
 
 
 
@@ -36,7 +37,7 @@ void setup() {
     .stm32    = true,     // stm32 event listening and battery monitoring
     .leds     = true,     // dual ws2812
     .audio    = false,     // audio engine with PCM51xx sound card
-    .sampler  = true,     // media indexing to midi bank/note-xxx
+    .sampler  = false,     // media indexing to midi bank/note-xxx
     .power    = true,    // power monitoring
     .wifi     = {
       .ssid = "kxkm-wifi",             // ssid (NULL to disable)
@@ -61,10 +62,12 @@ void setup() {
    if (engine->power)
     engine->power->start();
 
+    engine->stm32->custom(3500*7, 3650*7, 3700*7, 3750*7, 3825*7, 3950*7, 4200*7);
+
 
 
 LedsAnim = engine->leds->anim("decharge");
-LedsAnim->setParam(0, TimeOut);
+LedsAnim->setParam(0, TimeOutCharge );
 
 
 
@@ -84,10 +87,10 @@ void loop()
          if((engine->power->SOC < 40 ) && (engine->power->SOC >= 10 ))
          {
            LedsAnim = engine->leds->anim("decharge"); // Set anim to decharge
-           LedsAnim->setParam(0, TimeOut); // Set TimeOut
-           LedsAnim->setParam(3, Color2[0]);
-           LedsAnim->setParam(4, Color2[1]);
-           LedsAnim->setParam(5, Color2[2]);
+           LedsAnim->setParam(0, TimeOutDech); // Set TimeOut
+           LedsAnim->setParam(3, Color1[0]);
+           LedsAnim->setParam(4, Color1[1]);
+           LedsAnim->setParam(5, Color1[2]);
            LedsAnim->setParam(7, Color3[0]);
            LedsAnim->setParam(8, Color3[1]);
            LedsAnim->setParam(9, Color3[2]);
@@ -115,7 +118,7 @@ void loop()
          } else // SOC > 40
          {
            LedsAnim = engine->leds->anim("decharge"); // Set anim to decharge
-           LedsAnim->setParam(0, TimeOut); // Set TimeOut
+           LedsAnim->setParam(0, TimeOutDech); // Set TimeOut
            LedsAnim->setParam(3, Color1[0]);
            LedsAnim->setParam(4, Color1[1]);
            LedsAnim->setParam(5, Color1[2]);
@@ -128,14 +131,14 @@ void loop()
        else
        {
          LedsAnim = engine->leds->anim("charge"); // Set anim to charge
-         LedsAnim->setParam(0, TimeOut); // Set TimeOut
+         LedsAnim->setParam(0, TimeOutCharge); // Set TimeOut
 
        /* Set Colors */
           if((engine->power->SOC < 40 )&& (engine->power->SOC >= 10 ))
           {
-            LedsAnim->setParam(3, Color2[0]);
-            LedsAnim->setParam(4, Color2[1]);
-            LedsAnim->setParam(5, Color2[2]);
+            LedsAnim->setParam(3, Color1[0]);
+            LedsAnim->setParam(4, Color1[1]);
+            LedsAnim->setParam(5, Color1[2]);
             LedsAnim->setParam(7, Color3[0]);
             LedsAnim->setParam(8, Color3[1]);
             LedsAnim->setParam(9, Color3[2]);
@@ -174,9 +177,9 @@ void loop()
 
      // mode ++;
      // if (mode == 5) mode = 0;
-     engine->power->set_demo();
-     TimeOut = 0; // TimeOut of Leds anims in secs.  0 = infinite
-     InterruptTime = 5 ; // Time of Leds anim interrupt in secs
+     //engine->power->set_demo();
+     //TimeOut = 0; // TimeOut of Leds anims in secs.  0 = infinite
+     //InterruptTime = 5 ; // Time of Leds anim interrupt in secs
 
 
 
