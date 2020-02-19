@@ -7,12 +7,13 @@ K32* k32;
 
 
 void setup() {
-  
+
   k32 = new K32();
 
   k32->init_stm32();
   k32->init_audio();
   k32->init_light();
+  k32->init_remote(2);
 
   // WIFI
   k32->init_wifi("classic");
