@@ -11,6 +11,7 @@ void setup() {
   k32 = new K32();
 
   k32->init_stm32();
+  k32->init_sd();
   k32->init_audio();
   k32->init_light();
   k32->init_remote(2);
@@ -69,7 +70,18 @@ void loop() {
   // if (engine->stm32->dblclicked())
   //   engine->audio->stop();
 
-  delay(500);
+  delay(2000);
+
+  byte* buffer;
+  int size = k32->sd->readFile("test.bmp", buffer);
+
+  LOG("File read complete, size: "+String(size) );
+  LOG("File content:");
+  for(int k = 0; k<size; k++) {
+    LOGINL(buffer[k]);
+    LOGINL(" ");
+  }
+  LOG();
 
   // Serial.println(ESP.getFreeHeap());
 
